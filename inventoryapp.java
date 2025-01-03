@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class inventoryapp {
     public static void main(String[] args){
-        JFrame frame = new JFrame("W.H. Rogers - Inventory Management");
+        JFrame frame = new JFrame("W.H. Rogers - Login");
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
@@ -18,8 +20,6 @@ public class inventoryapp {
         frame.setSize(250,250); ; // Width: 400 pixels, Height: 300 pixels
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel welcome = new JLabel("jshdbckn");
-        frame.add(welcome);
         JPanel login = new JPanel();
         frame.add(login);
 
@@ -28,16 +28,49 @@ public class inventoryapp {
         frame.setContentPane(login); 
         login.setLayout(gridLayout); 
         login.add(new JLabel("Username:"));
-        login.add(new JTextField(20));
+        JTextField userinput = new JTextField("", 15);
+        login.add(userinput);
         login.add(new JLabel("Password:"));
-        login.add(new JPasswordField(20));
-        login.add(new JButton("Login"));
-        login.add(new JButton("Exit Program"));
+        JPasswordField passinput = new JPasswordField("", 20);
+        passinput.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent passinput) {
+                String text = new String(((JPasswordField) passinput).getPassword());
+                if (text.length() >= 25 && text.length() <= 5){
+                    JOptionPane.showMessageDialog(frame, "Password must be 30 characters or less.");
+                return true; // Reject invalid input
+        }
+                return false; // Allow valid input
+                }
+            }
+        );
+        
+        login.add(passinput);
+        JButton clicklogin = new JButton("Login");
+        login.add(clicklogin);
+        JButton clickexit = new JButton("Exit");
+        login.add(clickexit);
         login.setMaximumSize(new Dimension(250, 400));
 
         
         frame.setMaximizedBounds(new Rectangle(x*2, y, x*2, y));
+        frame.setAlwaysOnTop(true);
+        frame.setAutoRequestFocus(true);
         
+        clicklogin.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        String username = userinput.getText(); // Retrieve username
+        char[] password = passinput.getPassword(); // Retrieve password
+        JOptionPane.showMessageDialog(frame, "Username: " + username + "\nPassword: " + String.valueOf(password)); // Display inputs
+
+            }
+        });
+        clickexit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            frame.dispose();
+            }
+            });
+
         frame.setVisible(true);
     }
 }

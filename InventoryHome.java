@@ -1,3 +1,5 @@
+// Copied from LoginFrame.java as a starting point.
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;

@@ -4,10 +4,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class inventoryapp {
+public class LoginFrame extends JFrame implements ActionListener{
     public static void main(String[] args){
-        JFrame frame = new JFrame("W.H. Rogers - Login");
-
+        LoginFrame frame = new LoginFrame();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         int x_screen = screenSize.width;
@@ -20,23 +19,26 @@ public class inventoryapp {
         frame.setSize(250,250); ; // Width: 400 pixels, Height: 300 pixels
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel login = new JPanel();
-        frame.add(login);
+        JPanel inventory_home = new JPanel();
+        frame.add(inventory_home);
 
         GridLayout gridLayout = new GridLayout(6, 1);
 
-        frame.setContentPane(login); 
-        login.setLayout(gridLayout); 
-        login.add(new JLabel("Username:"));
+        frame.setContentPane(inventory_home); 
+        inventory_home.setLayout(gridLayout);
+        JLabel userlabel = new JLabel("Username:");
+        inventory_home.add(userlabel);
         JTextField userinput = new JTextField("", 15);
-        login.add(userinput);
-        login.add(new JLabel("Password:"));
+        inventory_home.add(userinput);
+        JLabel passlabel = new JLabel("Password:");
+        inventory_home.add(passlabel);
         JPasswordField passinput = new JPasswordField("", 20);
+
         passinput.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent passinput) {
                 String text = new String(((JPasswordField) passinput).getPassword());
-                if (text.length() >= 25 && text.length() <= 5){
+                if (text.length() <= 25 && text.length() > 0){
                     JOptionPane.showMessageDialog(frame, "Password must be 30 characters or less.");
                 return true; // Reject invalid input
         }
@@ -45,23 +47,34 @@ public class inventoryapp {
             }
         );
         
-        login.add(passinput);
-        JButton clicklogin = new JButton("Login");
-        login.add(clicklogin);
+        userlabel.setBounds(50,150,100,30);
+        passlabel.setBounds(50,220,100,30);
+        userinput.setBounds(150,150,150,30);
+        passinput.setBounds(150,220,150,30);
+        //showPassword.setBounds(150,250,150,30);
+        
+
+        inventory_home.add(passinput);
+        JButton clickinventory_home = new JButton("Login");
+        clickinventory_home.setBounds(50,300,100,30);
+        
+        inventory_home.add(clickinventory_home);
         JButton clickexit = new JButton("Exit");
-        login.add(clickexit);
-        login.setMaximumSize(new Dimension(250, 400));
+        clickexit.setBounds(200,300,100,30);
+        inventory_home.add(clickexit);
+        inventory_home.setMaximumSize(new Dimension(250, 400));
+
 
         
         frame.setMaximizedBounds(new Rectangle(x*2, y, x*2, y));
         frame.setAlwaysOnTop(true);
         frame.setAutoRequestFocus(true);
         
-        clicklogin.addActionListener(new ActionListener() {
+        clickinventory_home.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-        String username = userinput.getText(); // Retrieve username
-        char[] password = passinput.getPassword(); // Retrieve password
-        JOptionPane.showMessageDialog(frame, "Username: " + username + "\nPassword: " + String.valueOf(password)); // Display inputs
+        String userinput_string = userinput.getText(); // Retrieve username
+        char[] passinput_string = passinput.getPassword(); // Retrieve password
+        JOptionPane.showMessageDialog(frame, "Username: " + userinput_string + "\nPassword: " + String.valueOf(passinput_string)); // Display inputs
 
             }
         });
@@ -73,4 +86,12 @@ public class inventoryapp {
 
         frame.setVisible(true);
     }
+    
+    //Overriding actionPerformed() method
+    @Override
+    public void actionPerformed(ActionEvent e) {
+ 
+    }
+//
+
 }

@@ -1,5 +1,3 @@
-// Copied from LoginFrame.java as a starting point.
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -17,6 +15,7 @@ public class InventoryHome extends JFrame implements ActionListener{
         int x = (x_screen - frame.getWidth()) / 8;  // Center horizontally
         int y = (y_screen - frame.getWidth()) / 20;  // Top of the screen
         frame.setLocation(x, y);  // Centers the window on the screen
+        frame.setResizable(false);
 
         frame.setSize(1500,1000); ; // Width: 400 pixels, Height: 300 pixels
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,43 +27,35 @@ public class InventoryHome extends JFrame implements ActionListener{
 
         frame.setContentPane(inventory_home); 
         inventory_home.setLayout(gridLayout);
-        JLabel userlabel = new JLabel("Username:");
-        //inventory_home.add(userlabel);
-        JTextField userinput = new JTextField("", 15);
-        //inventory_home.add(userinput);
-        JLabel passlabel = new JLabel("Password:");
-        //inventory_home.add(passlabel);
-        JPasswordField passinput = new JPasswordField("", 20);
 
-        passinput.setInputVerifier(new InputVerifier() {
-            @Override
-            public boolean verify(JComponent passinput) {
-                String usernameString = new String(userinput.getText());
-                String passwordString = new String(((JPasswordField) passinput).getPassword());
-                if (passwordString.length() >= 25 && passwordString.length() <= 5){
-                    JOptionPane.showMessageDialog(frame, "Password must be 30 characters or less.");
-                return true; // Reject invalid input
-        }
-                return false; // Allow valid input
-                }
+        JButton clickinventory_add = new JButton("Home");
+        clickinventory_add.setBounds(50,80,100,30);
+        inventory_home.add(clickinventory_add);
+        
+        clickinventory_add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JComboBox<String> dropdown = new JComboBox<>(new String[] {"Test 1", "Text2", "Option 3"});
+                frame.add(dropdown); // Close the current frame (optional)
+                frame.setVisible(true);
+
             }
-        );
-        
-        userlabel.setBounds(50,150,100,30);
-        passlabel.setBounds(50,220,100,30);
-        userinput.setBounds(150,150,150,30);
-        passinput.setBounds(150,220,150,30);
-        //showPassword.setBounds(150,250,150,30);
-        
+        });
 
-        inventory_home.add(passinput);
-        JButton clickinventory_home = new JButton("Login");
-        clickinventory_home.setBounds(50,300,100,30);
-        
-        inventory_home.add(clickinventory_home);
+        String[] columnNames = {"Column1", "Column2", "Column3"}; // Column headers
+        Object[][] data = { // Table data
+        {"Row1-Data1", "Row1-Data2", "Row1-Data3"},
+        {"Row2-Data1", "Row2-Data2", "Row2-Data3"},
+        {"Row3-Data1", "Row3-Data2", "Row3-Data3"}
+        };
+        JTable table = new JTable(data, columnNames); // Create the table
+        JScrollPane scrollPane = new JScrollPane(table); // Add scrollable feature
+        inventory_home.add(scrollPane); // Add table to panel
+
         JButton clickexit = new JButton("Exit");
-        clickexit.setBounds(200,300,100,30);
+        clickexit.setBounds(200,10,-1,-30);
         inventory_home.add(clickexit);
+
+
         inventory_home.setMaximumSize(new Dimension(250, 400));
 
 
@@ -73,14 +64,6 @@ public class InventoryHome extends JFrame implements ActionListener{
         frame.setAlwaysOnTop(true);
         frame.setAutoRequestFocus(true);
         
-        clickinventory_home.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        String userinput_string = userinput.getText(); // Retrieve username
-        char[] passinput_string = passinput.getPassword(); // Retrieve password
-        JOptionPane.showMessageDialog(frame, "Username: " + userinput_string + "\nPassword: " + String.valueOf(passinput_string)); // Display inputs
-
-            }
-        });
         clickexit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             frame.dispose();
@@ -98,4 +81,3 @@ public class InventoryHome extends JFrame implements ActionListener{
 //
 
 }
-

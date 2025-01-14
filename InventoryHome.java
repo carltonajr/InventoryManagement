@@ -23,13 +23,14 @@ public class InventoryHome extends JFrame implements ActionListener{
         JPanel inventory_home = new JPanel();
         frame.add(inventory_home);
 
-        GridLayout gridLayout = new GridLayout(6, 1);
+        GridLayout gridLayout = new GridLayout(25, 30);
 
         frame.setContentPane(inventory_home); 
         inventory_home.setLayout(gridLayout);
 
-        JButton clickinventory_add = new JButton("Home");
+        JButton clickinventory_add = new JButton("New Entry");
         clickinventory_add.setBounds(50,80,100,30);
+        clickinventory_add.setPreferredSize(new Dimension(150, 200));
         inventory_home.add(clickinventory_add);
         
         clickinventory_add.addActionListener(new ActionListener() {
@@ -41,11 +42,10 @@ public class InventoryHome extends JFrame implements ActionListener{
             }
         });
 
-        String[] columnNames = {"Column1", "Column2", "Column3"}; // Column headers
+        String[] columnNames = {"Active", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", "Sheet Size [WxL]", "Total Counts", "Area", "Rack"}; // Column headers
         Object[][] data = { // Table data
-        {"Row1-Data1", "Row1-Data2", "Row1-Data3"},
-        {"Row2-Data1", "Row2-Data2", "Row2-Data3"},
-        {"Row3-Data1", "Row3-Data2", "Row3-Data3"}
+        {"true", "1/7/2025", "430 Stainless", "0.60", "1.5", "48x96", "12", "ITW", "ITW1"},
+
         };
         JTable table = new JTable(data, columnNames); // Create the table
         JScrollPane scrollPane = new JScrollPane(table); // Add scrollable feature

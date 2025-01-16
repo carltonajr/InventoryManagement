@@ -1,0 +1,18 @@
+CREATE TABLE company_inventory (
+    product_id VARCHAR PRIMARY KEY,
+    is_active BIT NOT NULL DEFAULT 0, 
+    last_updated DATE,
+    metal_type VARCHAR(5),
+    thickness_in FLOAT,
+    thickness_mm FLOAT,
+    sheet_size_WL VARCHAR(6),
+    total_counts FLOAT,
+    location_area VARCHAR,
+    rack VARCHAR(4)
+);
+
+SELECT * FROM company_inventory;
+
+
+
+

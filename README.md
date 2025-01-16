@@ -10,11 +10,14 @@ InventoryHome.java
   - Search for specific inventory pieces
   - New Entries of Products
   - Update Current Inventory
+    * Product ID (Primary Key)
+    * Active / Not Active
+    * Last Updated
     * Metal Type
     * Thickness [in.]
     * Thickness [MM]
     * Counts
-    * Active / Not Active
+    * Sheet Size (WxL)
     * Shipment Information
     * Current Area Location
     * Rack Location

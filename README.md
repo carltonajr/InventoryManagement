@@ -18,6 +18,5 @@ InventoryHome.java
     * Thickness [MM]
     * Counts
     * Sheet Size (WxL)
-    * Shipment Information
     * Current Area Location
     * Rack Location

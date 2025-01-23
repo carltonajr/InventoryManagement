@@ -1,34 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
+import java.awt.event.*;
 
 public class InventoryHome extends JFrame implements ActionListener{
     public static void main(String[] args){
-        LoginFrame frame = new LoginFrame();
+        //Reformated 'frame' to JFrame 
+        JFrame frame = new JFrame();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         int x_screen = screenSize.width;
         int y_screen = screenSize.height;
 
-        int x = (x_screen - frame.getWidth()) / 8;  // Center horizontally
-        int y = (y_screen - frame.getWidth()) / 20;  // Top of the screen
-        frame.setLocation(x, y);  // Centers the window on the screen
-        frame.setResizable(false);
-
-        frame.setSize(1500,1000); ; // Width: 400 pixels, Height: 300 pixels
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        int x = (x_screen - frame.getWidth()) / 8;
+        int y = (y_screen - frame.getWidth()) / 20;
+        frame.setLocation(x, y);
+        frame.setTitle("Inventory App - Landing Page");
+        frame.setSize(1500,1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel inventory_home = new JPanel();
         frame.add(inventory_home);
 
-        GridLayout gridLayout = new GridLayout(25, 30);
-
+        //'inventory_home' layout cleaner definition
         frame.setContentPane(inventory_home); 
-        inventory_home.setLayout(gridLayout);
+        inventory_home.setLayout(new GridLayout(4, 3));
 
-        JButton clickinventory_add = new JButton("New Entry");
+        JButton clickinventory_add = new JButton("New Entries");
         clickinventory_add.setBounds(50,80,100,30);
         clickinventory_add.setPreferredSize(new Dimension(150, 200));
         inventory_home.add(clickinventory_add);
@@ -36,15 +32,15 @@ public class InventoryHome extends JFrame implements ActionListener{
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JComboBox<String> dropdown = new JComboBox<>(new String[] {"Test 1", "Text2", "Option 3"});
-                frame.add(dropdown); // Close the current frame (optional)
+                frame.add(dropdown);
                 frame.setVisible(true);
 
             }
         });
 
-        String[] columnNames = {"Active", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", "Sheet Size [WxL]", "Total Counts", "Area", "Rack"}; // Column headers
+        String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
         Object[][] data = { // Table data
-        {"true", "1/7/2025", "430 Stainless", "0.60", "1.5", "48x96", "12", "ITW", "ITW1"},
+        {"", "true", "1/7/2025", "430 Stainless", "0.60", "1.5", "48x96", "12", "ITW", "ITW1"},
 
         };
         JTable table = new JTable(data, columnNames); // Create the table
@@ -56,11 +52,6 @@ public class InventoryHome extends JFrame implements ActionListener{
         inventory_home.add(clickexit);
 
 
-        inventory_home.setMaximumSize(new Dimension(250, 400));
-
-
-        
-        frame.setMaximizedBounds(new Rectangle(x*2, y, x*2, y));
         frame.setAlwaysOnTop(true);
         frame.setAutoRequestFocus(true);
         
@@ -72,12 +63,9 @@ public class InventoryHome extends JFrame implements ActionListener{
 
         frame.setVisible(true);
     }
-    
     //Overriding actionPerformed() method
     @Override
     public void actionPerformed(ActionEvent e) {
- 
+         
     }
-//
-
 }

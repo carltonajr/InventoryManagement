@@ -20,3 +20,6 @@ InventoryHome.java
     * Sheet Size (WxL)
     * Current Area Location
     * Rack Location
+
+SQLDatabaseConnection.java
+  Connect to the SQLite Database for operations.

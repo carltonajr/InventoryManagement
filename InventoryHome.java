@@ -2,44 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import javax.swing.table.*;
+import java.sql.Date;
+import java.util.*;
+import java.util.Locale.Category;
 
 
-class SQLDatabaseConnection {
-    public static void main(String[] args) {
-        final String CONNECTION = "jdbc:sqlite:C:lib/inventory.db";
-        String select_all = "SELECT * FROM company_inventory;";
-        String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
-                                "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
-        try (Connection conn = DriverManager.getConnection(CONNECTION);
-            Statement statement = conn.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(select_all);
-            {
-                while(resultSet.next()){
-                    Object[][] table_data = {
-                    {
-                    resultSet.getString("product_id"),
-                    resultSet.getString("is_active"),
-                    resultSet.getString("last_updated"),
-                    resultSet.getString("metal_type"),
-                    resultSet.getString("thickness_in"),
-                    resultSet.getString("thickness_mm"),
-                    resultSet.getString("sheet_size_WL"),
-                    resultSet.getString("total_counts"),
-                    resultSet.getString("location_area"),
-                    resultSet.getString("rack")}
-                    };
-                JScrollPane sqlscrollPane = new JScrollPane(new JTable(new DefaultTableModel(table_data, columnNames)));
-                }
-                
-            }
-            
-            }
-            catch (SQLException e) {
-                System.out.println(e);
-            }
-            System.exit(0);
-    }
+//
+class Database {
+    private String productid;
+    private Boolean is_active;
+    private Date last_updated;
+    private Category metal_type;
+    private Float thickness_in;
+    private Float thinkness_mm;
+    private String sheet_size;
+    private Float total_counts;
+    private Category location_area;
+    private String rack;
+    
 }
 
 public class InventoryHome extends JFrame implements ActionListener{
@@ -51,7 +31,6 @@ public class InventoryHome extends JFrame implements ActionListener{
             Dimension screenSize = toolkit.getScreenSize();
             int x_screen = screenSize.width;
             int y_screen = screenSize.height;
-            SQLDatabaseConnection SQLDatabaseConnection = new SQLDatabaseConnection();
     
             int x = (x_screen - frame.getWidth()) / 8;
             int y = (y_screen - frame.getWidth()) / 20;
@@ -76,26 +55,14 @@ public class InventoryHome extends JFrame implements ActionListener{
                     JComboBox<String> dropdown = new JComboBox<>(new String[] {"Test 1", "Text2", "Option 3"});
                     frame.add(dropdown);
                     frame.setVisible(true);
-    
-                }
-            });
+                }});
+            
+
             //
-            String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
-            Object[][] data = {{
-                SQLDatabaseConnection.sqlscrollPane.product_id,
-                "true",
-                "1/7/2025",
-                "430 Stainless",
-                "0.60",
-                "1.5",
-                "48x96",
-                "12",
-                "ITW",
-                "ITW1"
-            }};
-            JTable table = new JTable(data, columnNames); // Create the table
+            
+            //JTable table = new JTable(data, columnNames); // Create the table
             //JScrollPane scrollPane = new JScrollPane(table); // Add scrollable feature
-            //inventory_home.addSQLDatabaseConnection(SQLDatabaseConnection); // Add table to panel
+            //inventory_home.add(scrollPane); // Add table to panel
 
         JButton clickexit = new JButton("Exit");
         clickexit.setBounds(200,10,-1,-30);
@@ -113,9 +80,8 @@ public class InventoryHome extends JFrame implements ActionListener{
 
         frame.setVisible(true);
     }
-    
     //Overriding actionPerformed() method
     @Override
-    public void actionPerformed(ActionEvent e) {   
+    public void actionPerformed(ActionEvent e) {    
     }
 }

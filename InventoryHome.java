@@ -2,26 +2,140 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
-import java.util.Locale.Category;
 
-
-//
-class Database {
-    private String productid;
-    private Boolean is_active;
-    private Date last_updated;
-    private Category metal_type;
-    private Float thickness_in;
-    private Float thinkness_mm;
-    private String sheet_size;
-    private Float total_counts;
-    private Category location_area;
+class InventoryItem {
+    // Declare private variables for the attributes
+    private String productId;
+    private boolean isActive;
+    private String lastUpdated;
+    private String metalType;
+    private float thicknessIn;
+    private float thicknessMm;
+    private String sheetSizeWL;
+    private float totalCounts;
+    private String locationArea;
     private String rack;
-    
+
+    // Constructor to initialize the attributes
+    public InventoryItem(String productId, boolean isActive, String lastUpdated, String metalType,
+                         float thicknessIn, float thicknessMm, String sheetSizeWL, float totalCounts,
+                         String locationArea, String rack) {
+        this.productId = productId;
+        this.isActive = isActive;
+        this.lastUpdated = lastUpdated;
+        this.metalType = metalType;
+        this.thicknessIn = thicknessIn;
+        this.thicknessMm = thicknessMm;
+        this.sheetSizeWL = sheetSizeWL;
+        this.totalCounts = totalCounts;
+        this.locationArea = locationArea;
+        this.rack = rack;
+    }
+
+    // Getters and Setters for each attribute
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getMetalType() {
+        return metalType;
+    }
+
+    public void setMetalType(String metalType) {
+        this.metalType = metalType;
+    }
+
+    public float getThicknessIn() {
+        return thicknessIn;
+    }
+
+    public void setThicknessIn(float thicknessIn) {
+        this.thicknessIn = thicknessIn;
+    }
+
+    public float getThicknessMm() {
+        return thicknessMm;
+    }
+
+    public void setThicknessMm(float thicknessMm) {
+        this.thicknessMm = thicknessMm;
+    }
+
+    public String getSheetSizeWL() {
+        return sheetSizeWL;
+    }
+
+    public void setSheetSizeWL(String sheetSizeWL) {
+        this.sheetSizeWL = sheetSizeWL;
+    }
+
+    public float getTotalCounts() {
+        return totalCounts;
+    }
+
+    public void setTotalCounts(float totalCounts) {
+        this.totalCounts = totalCounts;
+    }
+
+    public String getLocationArea() {
+        return locationArea;
+    }
+
+    public void setLocationArea(String locationArea) {
+        this.locationArea = locationArea;
+    }
+
+    public String getRack() {
+        return rack;
+    }
+
+    public void setRack(String rack) {
+        this.rack = rack;
+    }
 }
 
+class SELECTDatabaseConnection {
+
+    public static void main(String[] args) {
+        final String CONNECTION = "jdbc:sqlite:C:lib/inventory.db";
+        String select_all = "SELECT * FROM company_inventory;";
+        try (Connection conn = DriverManager.getConnection(CONNECTION);
+            Statement statement = conn.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(select_all);
+            {
+                while(resultSet.next()){
+                    
+                }
+            
+            }
+            
+            }
+            catch (SQLException e) {
+                System.out.println(e);
+            }
+            System.exit(0);
+    }
+}
 public class InventoryHome extends JFrame implements ActionListener{
     
         public static void main(String[] args){
@@ -80,8 +194,12 @@ public class InventoryHome extends JFrame implements ActionListener{
 
         frame.setVisible(true);
     }
+    
     //Overriding actionPerformed() method
     @Override
-    public void actionPerformed(ActionEvent e) {    
+    public void actionPerformed(ActionEvent e) {
+         
     }
+//
+
 }

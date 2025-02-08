@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -15,11 +18,12 @@ class InventoryItem {
     private float totalCounts;
     private String locationArea;
     private String rack;
+    private String notes;
 
     // Constructor to initialize the attributes
     public InventoryItem(String productId, boolean isActive, String lastUpdated, String metalType,
                          float thicknessIn, float thicknessMm, String sheetSizeWL, float totalCounts,
-                         String locationArea, String rack) {
+                         String locationArea, String rack, String notes) {
         this.productId = productId;
         this.isActive = isActive;
         this.lastUpdated = lastUpdated;
@@ -30,6 +34,7 @@ class InventoryItem {
         this.totalCounts = totalCounts;
         this.locationArea = locationArea;
         this.rack = rack;
+        this.notes = notes;
     }
 
     // Getters and Setters for each attribute
@@ -112,32 +117,55 @@ class InventoryItem {
     public void setRack(String rack) {
         this.rack = rack;
     }
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }
 
 class SELECTDatabaseConnection {
 
-    public static void main(String[] args) {
+}
+public class InventoryHome extends JFrame implements ActionListener{
+    public static TableModel tableModel;
+
+    {
+        String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
+                "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
         final String CONNECTION = "jdbc:sqlite:C:lib/inventory.db";
+        
         String select_all = "SELECT * FROM company_inventory;";
         try (Connection conn = DriverManager.getConnection(CONNECTION);
             Statement statement = conn.createStatement()) {
             ResultSet resultSet = statement.executeQuery(select_all);
+            DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+            
             {
                 while(resultSet.next()){
-                    
+                    Object[] rowData = {
+                        resultSet.getString("product_id"),
+                        resultSet.getBoolean("is_active"),
+                        resultSet.getDate("last_updated"),
+                        resultSet.getString("metal_type"),
+                        resultSet.getFloat("thickness_in"),
+                        resultSet.getFloat("thickness_mm"),
+                        resultSet.getString("sheet_size_WL"),
+                        resultSet.getFloat("total_counts"),
+                        resultSet.getString("location"),
+                        resultSet.getString("rack"),
+                        resultSet.getString("notes")
+                    };  
+                    tableModel.addRow(rowData);
                 }
-            
             }
-            
             }
             catch (SQLException e) {
                 System.out.println(e);
             }
-            System.exit(0);
     }
-}
-public class InventoryHome extends JFrame implements ActionListener{
-    
         public static void main(String[] args){
             //Reformated 'frame' to JFrame 
             JFrame frame = new JFrame();
@@ -158,6 +186,7 @@ public class InventoryHome extends JFrame implements ActionListener{
             //'inventory_home' layout cleaner definition
             frame.setContentPane(inventory_home); 
             inventory_home.setLayout(new GridLayout(4, 3));
+            inventory_home.add(new JScrollPane(new JTable(tableModel))); // Add table to panel
     
             JButton clickinventory_add = new JButton("New Entries");
             clickinventory_add.setBounds(50,80,100,30);
@@ -174,10 +203,6 @@ public class InventoryHome extends JFrame implements ActionListener{
 
             //
             
-            //JTable table = new JTable(data, columnNames); // Create the table
-            //JScrollPane scrollPane = new JScrollPane(table); // Add scrollable feature
-            //inventory_home.add(scrollPane); // Add table to panel
-
         JButton clickexit = new JButton("Exit");
         clickexit.setBounds(200,10,-1,-30);
         inventory_home.add(clickexit);
@@ -194,12 +219,8 @@ public class InventoryHome extends JFrame implements ActionListener{
 
         frame.setVisible(true);
     }
-    
     //Overriding actionPerformed() method
     @Override
-    public void actionPerformed(ActionEvent e) {
-         
+    public void actionPerformed(ActionEvent e) {      
     }
-//
-
 }

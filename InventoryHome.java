@@ -1,8 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.util.ArrayList;
 
 class oop_inventory {
+    private String product_id;
+    private Boolean isactive;
+    private Date last_updated;
+    private String metal_type;
+    private float metal_thickness_in;
+    private float metal_thickness_mm;    
+    private String sheet_size_WL;
+    private float total_counts;
+    private String location_area;
+    private String rack;
+    private String notes;
     public static void main(String[] args) {
         JFrame main_frame = new JFrame();
         main_frame.setResizable(false);
@@ -31,7 +44,7 @@ class oop_inventory {
         JComboBox<String> dropdown_finish = new JComboBox<>(new String[] {"Select Option", "Mill", "2B", "#3", "Other"});
         JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option", "20ga", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
-        JTextField enter_counts = new JTextField("", 1);
+        JTextField enter_counts = new JTextField(1);
         enter_counts.setMaximumSize(screenSize);
         inventory_panel_template.setSize(x_template, y_template);
         inventory_panel_template.add(new JLabel("Metal Type"));
@@ -48,10 +61,21 @@ class oop_inventory {
         inventory_panel_template.add(buttons);
 
         JButton filter_entry = new JButton("Filter Selections");
-        //filter_entry.setBounds(0,0,1,30);
+        filter_entry.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if ("Select Option".equals(dropdown_type.getSelectedItem()) &&
+                    "Select Option".equals(dropdown_finish.getSelectedItem()) &&
+                    "Select Option".equals(dropdown_thickness_gauges_inches.getSelectedItem()) &&
+                    "Select Option".equals(dropdown_size.getSelectedItem())) {
+                        JOptionPane.showMessageDialog(inventory_home, "No filters provided. Change one or more of the filters to search.");
+                    }
+                if (!"Select Option".equals(dropdown_type.getSelectedItem())){}
+
+            }
+            });
         buttons.add(Box.createVerticalStrut(50)); 
+
         JButton cancel_entry = new JButton("Cancel Entry");
-        //cancel_entry.setBounds(0,0,1,30);
         buttons.add(filter_entry);
         buttons.add(cancel_entry);
         
@@ -92,7 +116,6 @@ class oop_inventory {
                     }
                     });
             }});
-
     JButton clickexit = new JButton("Exit");
     clickexit.setBounds(200,10,-1,-30);
     inventory_home.add(clickexit);

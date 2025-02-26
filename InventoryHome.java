@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 class oop_inventory {
     private String product_id;
@@ -16,7 +17,7 @@ class oop_inventory {
     private String location_area;
     private String rack;
     private String notes;
-    public static void main(String[] args) {
+    public static <picks> void main(String[] args) {
         JFrame main_frame = new JFrame();
         main_frame.setResizable(false);
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -41,7 +42,7 @@ class oop_inventory {
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
         JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum","Other"});
-        JComboBox<String> dropdown_finish = new JComboBox<>(new String[] {"Select Option", "Mill", "2B", "#3", "Other"});
+        JComboBox<String> dropdown_finish = new JComboBox<>(new String[] {"Select Option", "Mill", "2B", "ROF", "#3"});
         JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option", "20ga", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         JTextField enter_counts = new JTextField(1);
@@ -62,15 +63,37 @@ class oop_inventory {
 
         JButton filter_entry = new JButton("Filter Selections");
         filter_entry.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if ("Select Option".equals(dropdown_type.getSelectedItem()) &&
-                    "Select Option".equals(dropdown_finish.getSelectedItem()) &&
-                    "Select Option".equals(dropdown_thickness_gauges_inches.getSelectedItem()) &&
-                    "Select Option".equals(dropdown_size.getSelectedItem())) {
-                        JOptionPane.showMessageDialog(inventory_home, "No filters provided. Change one or more of the filters to search.");
-                    }
-                if (!"Select Option".equals(dropdown_type.getSelectedItem())){}
 
+            public void actionPerformed(ActionEvent e) {
+
+                Collection<String> items = new ArrayList<>();
+                items.add(dropdown_type.getSelectedItem().toString());
+                items.add(dropdown_finish.getSelectedItem().toString());
+                items.add(dropdown_thickness_gauges_inches.getSelectedItem().toString());
+                items.add(dropdown_size.getSelectedItem().toString());
+                
+                Collection<String> filters = new ArrayList<>();
+                for (String item : items) {
+                    if (!"Select Option".equals(item)){
+                    filters.add(item);}
+                }
+                System.out.println(filters);
+                // Breaking Point
+                while (filters.size() != 0){
+                    if (filters.size() == 0){
+    
+                    }
+                    else {
+                        System.out.println(filters);
+                        JOptionPane.showMessageDialog(inventory_home, (
+                            "Filtering with criteria: " + 
+                            dropdown_type.getSelectedItem() + ", " +
+                            dropdown_finish.getSelectedItem() + ", " +
+                            dropdown_thickness_gauges_inches.getSelectedItem() + ", " +
+                            dropdown_size.getSelectedItem()));}
+                }
+                
+                
             }
             });
         buttons.add(Box.createVerticalStrut(50)); 
@@ -116,6 +139,7 @@ class oop_inventory {
                     }
                     });
             }});
+
     JButton clickexit = new JButton("Exit");
     clickexit.setBounds(200,10,-1,-30);
     inventory_home.add(clickexit);

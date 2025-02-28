@@ -31,7 +31,7 @@ class oop_inventory {
         JPanel inventory_home = new JPanel();
         JPanel buttons = new JPanel();
         main_frame.add(inventory_home);
-        //main_frame.add(buttons);
+
         JButton clickinventory_add = new JButton("New Inventory Entry");
         clickinventory_add.setBounds(200,10,1,3);
         inventory_home.add(clickinventory_add);
@@ -47,6 +47,7 @@ class oop_inventory {
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         JTextField enter_counts = new JTextField(1);
         enter_counts.setMaximumSize(screenSize);
+        
         inventory_panel_template.setSize(x_template, y_template);
         inventory_panel_template.add(new JLabel("Metal Type"));
         inventory_panel_template.add(dropdown_type);
@@ -78,23 +79,8 @@ class oop_inventory {
                     filters.add(item);}
                 }
                 System.out.println(filters);
-                // Breaking Point
-                while (filters.size() != 0){
-                    if (filters.size() == 0){
-    
-                    }
-                    else {
-                        System.out.println(filters);
-                        JOptionPane.showMessageDialog(inventory_home, (
-                            "Filtering with criteria: " + 
-                            dropdown_type.getSelectedItem() + ", " +
-                            dropdown_finish.getSelectedItem() + ", " +
-                            dropdown_thickness_gauges_inches.getSelectedItem() + ", " +
-                            dropdown_size.getSelectedItem()));}
-                }
-                
-                
-            }
+                JOptionPane.showMessageDialog(inventory_home, ("Filtering with criteria: " + filters));
+                }          
             });
         buttons.add(Box.createVerticalStrut(50)); 
 

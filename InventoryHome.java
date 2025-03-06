@@ -33,23 +33,16 @@ class oop_inventory {
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
         JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum","Other"});
-        JComboBox<String> dropdown_finish = new JComboBox<>(new String[] {"Select Option", "Mill", "2B", "ROF", "#3"});
-        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option", "20ga", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "Other"});
+        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option", "", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
-        JTextField enter_counts = new JTextField(1);
-        enter_counts.setMaximumSize(screenSize);
         
         inventory_panel_template.setSize(x_template, y_template);
         inventory_panel_template.add(new JLabel("Metal Type"));
         inventory_panel_template.add(dropdown_type);
-        //inventory_panel_template.add(new JLabel("Metal Finish"));
-        //inventory_panel_template.add(dropdown_finish);
-        inventory_panel_template.add(new JLabel("Sheet Thickness"));
+        inventory_panel_template.add(new JLabel("Sheet Thickness [inches]"));
         inventory_panel_template.add(dropdown_thickness_gauges_inches);
-        inventory_panel_template.add(new JLabel("Sheet Size"));
+        inventory_panel_template.add(new JLabel("Sheet Size [WxL]"));
         inventory_panel_template.add(dropdown_size);
-        //inventory_panel_template.add(new JLabel("Enter total number of sheets."));
-        //inventory_panel_template.add(enter_counts);
 
         inventory_panel_template.add(buttons);
 
@@ -57,28 +50,29 @@ class oop_inventory {
         filter_entry.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                HashMap<String, String> selections_map = new HashMap<>();
+                //metal_type, thickness, sheet_size
+
+                selections_map.put("metal_type", dropdown_type.getSelectedItem().toString());
+                selections_map.put("thickness_in", dropdown_thickness_gauges_inches.getSelectedItem().toString());
+                selections_map.put("sheet_size_WL", dropdown_size.getSelectedItem().toString());
+                System.out.println(selections_map);
                 Collection<String> items = new ArrayList<>();
-                items.add(dropdown_type.getSelectedItem().toString());
-                items.add(dropdown_finish.getSelectedItem().toString());
-                items.add(dropdown_thickness_gauges_inches.getSelectedItem().toString());
                 items.add(dropdown_size.getSelectedItem().toString());
                 
                 Collection<String> filters = new ArrayList<>();
-                
-                for (String item : items) {
+                // map.keySet()
+                for (String item : selections_map.values()) {
                     if (!"Select Option".equals(item)){
                     filters.add(item);}
                 }
+                System.out.println(filters);
                 try {
-            // Load Type-4 Driver
-            // MySQL Type-4 driver class
-            // Establish connection
-            //
             // Create a statement
             String url = "jdbc:sqlite:C:lib/inventory.db";
-            HashMap<String, String> selections_map = new HashMap<>();
-
-            // metal_type, 
+            
+            
+            // metal_type, thickness, sheet_size
             // Updated query syntax for modern databases
             String query_select_all = new String("SELECT * FROM company_inventory;");
             String query_select_filter = new String("");
@@ -124,12 +118,7 @@ class oop_inventory {
                 notes.add(item_notes);
                 row_count = row_count + 1;
             }
-            System.out.println(product);
-            System.out.println(last_updates);
-            System.out.println(sheet_size_WL);
-            System.out.println(sheet_size_WL);
-            System.out.println(counts);
-            System.out.println(notes);
+
             System.out.println("Number of rows affected by this query: " + row_count);
 
             // Close the connection
@@ -137,8 +126,7 @@ class oop_inventory {
             //System.out.println("Connection closed.");
         }
         catch (SQLException error_sql_query) {
-            System.err.println("SQL Error: "
-                               + error_sql_query.getMessage());
+            System.err.println("SQL Error: " + error_sql_query.getMessage());
         }
                 
         System.out.println(filters);
@@ -156,6 +144,8 @@ class oop_inventory {
             public void actionPerformed(ActionEvent e) {
                     
                     JPanel new_entry_panel = inventory_panel_template;
+                    JTextField enter_counts = new JTextField(1);
+                    enter_counts.setMaximumSize(screenSize);
                     main_frame.add(new_entry_panel);
                     main_frame.setTitle("Inventory App - New Inventory");  
                         

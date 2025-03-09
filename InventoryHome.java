@@ -48,24 +48,30 @@ class oop_inventory {
 
         JButton filter_entry = new JButton("Filter Selections");
         filter_entry.addActionListener(new ActionListener() {
-
+        String query_select_all = new String("SELECT * FROM company_inventory;");
+        String query_select_filter = new String("");
+        String query_insert = new String("");
+        String query_delete = new String("");
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
-                //metal_type, thickness, sheet_size
-
+                //metal_type, thickness_in, sheet_size
+            
                 selections_map.put("metal_type", dropdown_type.getSelectedItem().toString());
                 selections_map.put("thickness_in", dropdown_thickness_gauges_inches.getSelectedItem().toString());
                 selections_map.put("sheet_size_WL", dropdown_size.getSelectedItem().toString());
                 System.out.println(selections_map);
                 Collection<String> items = new ArrayList<>();
                 items.add(dropdown_size.getSelectedItem().toString());
-                
+                int counting = 0;
+                System.out.println(counting);
                 Collection<String> filters = new ArrayList<>();
                 // map.keySet()
                 for (String item : selections_map.values()) {
                     if (!"Select Option".equals(item)){
-                    filters.add(item);}
-                }
+                    counting = counting + 1;
+                    filters.add(item);
+                    System.out.println(counting);
+                }}
                 System.out.println(filters);
                 try {
             // Create a statement
@@ -74,10 +80,6 @@ class oop_inventory {
             
             // metal_type, thickness, sheet_size
             // Updated query syntax for modern databases
-            String query_select_all = new String("SELECT * FROM company_inventory;");
-            String query_select_filter = new String("");
-            String query_insert = new String("");
-            String query_delete = new String("");
             Statement conn_statement = DriverManager.getConnection(url).createStatement();
             
             // Execute the query

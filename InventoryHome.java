@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.sql.Date;
 import java.util.*;
-
 
 class oop_inventory {
 
@@ -32,8 +30,8 @@ class oop_inventory {
         int y_template = (y_screen - main_frame.getWidth()) / 8;
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
-        JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum","Other"});
-        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option", "", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "Other"});
+        JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "Other"});
+        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","22ga", "20ga", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "5/8", "1/2", "Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         
         inventory_panel_template.setSize(x_template, y_template);
@@ -49,16 +47,16 @@ class oop_inventory {
         JButton filter_entry = new JButton("Filter Selections");
         filter_entry.addActionListener(new ActionListener() {
         String query_select_all = new String("SELECT * FROM company_inventory;");
-        String query_select_filter = new String("");
+        String query_select_filter = new String("SELECT * FROM company_inventory WHERE ");
         String query_insert = new String("");
         String query_delete = new String("");
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
-                //metal_type, thickness_in, sheet_size
             
                 selections_map.put("metal_type", dropdown_type.getSelectedItem().toString());
                 selections_map.put("thickness_in", dropdown_thickness_gauges_inches.getSelectedItem().toString());
                 selections_map.put("sheet_size_WL", dropdown_size.getSelectedItem().toString());
+                Set<Map.Entry<String, String>> selections_map_entrySet = selections_map.entrySet();
                 System.out.println(selections_map);
                 Collection<String> items = new ArrayList<>();
                 items.add(dropdown_size.getSelectedItem().toString());
@@ -66,13 +64,18 @@ class oop_inventory {
                 System.out.println(counting);
                 Collection<String> filters = new ArrayList<>();
                 // map.keySet()
-                for (String item : selections_map.values()) {
-                    if (!"Select Option".equals(item)){
-                    counting = counting + 1;
-                    filters.add(item);
-                    System.out.println(counting);
-                }}
-                System.out.println(filters);
+                for (Map.Entry<String, String> item: selections_map_entrySet)
+                {
+                    if (!"Select Option".equals(item.getValue())){
+                        for (String value : selections_map.values()) {
+                        counting = counting + 1;
+                        filters.add(value);
+                        System.out.println(counting);
+                    }}
+                    System.out.println(filters);
+                }
+                
+                
                 try {
             // Create a statement
             String url = "jdbc:sqlite:C:lib/inventory.db";
@@ -84,7 +87,7 @@ class oop_inventory {
             
             // Execute the query
             int row_count = 0;
-            ResultSet run_connection = conn_statement.executeQuery(query_select_all);
+            ResultSet run_connection = conn_statement.executeQuery(query_select_filter);
             Collection<String> product = new ArrayList<>();
             Collection<Boolean> is_active = new ArrayList<>();
             Collection<String> last_updates = new ArrayList<>();

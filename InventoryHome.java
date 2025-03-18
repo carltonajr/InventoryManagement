@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -15,7 +16,7 @@ class oop_inventory {
         int y_screen = screenSize.height;
         System.out.println();
         main_frame.setTitle("Inventory App - Landing Page");
-        main_frame.setSize(x_screen/2,y_screen/2);
+        main_frame.setSize(x_screen/2,y_screen);
         main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel inventory_home = new JPanel();
         JPanel buttons = new JPanel();
@@ -46,10 +47,8 @@ class oop_inventory {
 
         JButton filter_entry = new JButton("Filter Selections");
         filter_entry.addActionListener(new ActionListener() {
-        String query_select_all = new String("SELECT * FROM company_inventory;");
-        String query_select_filter = new String("SELECT * FROM company_inventory WHERE ");
-        String query_insert = new String("");
-        String query_delete = new String("");
+        String query_select_filter = new String("SELECT * FROM company_inventory;");
+
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
             
@@ -70,16 +69,18 @@ class oop_inventory {
                         for (String value : selections_map.values()) {
                         counting = counting + 1;
                         filters.add(value);
+                        System.out.println(filters);
                         System.out.println(counting);
                     }}
-                    System.out.println(filters);
                 }
                 
                 
                 try {
             // Create a statement
             String url = "jdbc:sqlite:C:lib/inventory.db";
-            
+            String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
+                                "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
+            DefaultTableModel model = new DefaultTableModel(columnNames, 0);
             
             // metal_type, thickness, sheet_size
             // Updated query syntax for modern databases
@@ -88,42 +89,23 @@ class oop_inventory {
             // Execute the query
             int row_count = 0;
             ResultSet run_connection = conn_statement.executeQuery(query_select_filter);
-            Collection<String> product = new ArrayList<>();
-            Collection<Boolean> is_active = new ArrayList<>();
-            Collection<String> last_updates = new ArrayList<>();
-            Collection<Float> metal_thickness_in = new ArrayList<>();
-            Collection<Float> metal_thickness_mm = new ArrayList<>();
-            Collection<String> sheet_size_WL = new ArrayList<>();
-            Collection<Float> counts = new ArrayList<>();
-            Collection<String> location = new ArrayList<>();
-            Collection<String> rack = new ArrayList<>();
-            Collection<String> notes = new ArrayList<>();
-
             while(run_connection.next()){
-                String product_id = run_connection.getString("product_id");
-                Boolean active = run_connection.getBoolean("is_active");
-                String updated = run_connection.getString("last_updated");
-                Float in_thick = run_connection.getFloat("thickness_in");
-                Float mm_thick = run_connection.getFloat("thickness_mm");
-                String sheet_size = run_connection.getString("sheet_size_WL");
-                Float total_counts = run_connection.getFloat("total_counts");
-                String rack_location = run_connection.getString("location_area");
-                String in_rack = run_connection.getString("rack");
-                String item_notes = run_connection.getString("notes");
-                
-                product.add(product_id);
-                is_active.add(active);
-                last_updates.add(updated);
-                metal_thickness_in.add(in_thick);
-                metal_thickness_mm.add(mm_thick);
-                sheet_size_WL.add(sheet_size);
-                counts.add(total_counts);
-                location.add(rack_location);
-                rack.add(in_rack);
-                notes.add(item_notes);
-                row_count = row_count + 1;
+                Object[] row = {run_connection.getString("product_id"),
+                run_connection.getBoolean("is_active"),
+                run_connection.getString("last_updated"),
+                run_connection.getString("metal_type"),
+                run_connection.getFloat("thickness_in"),
+                run_connection.getFloat("thickness_mm"),
+                run_connection.getString("sheet_size_WL"),
+                run_connection.getFloat("total_counts"),
+                run_connection.getString("location_area"),
+                run_connection.getString("rack"),
+                run_connection.getString("notes")};
+                System.out.println();
+                model.addRow(row);
             }
-
+            JScrollPane query_results = new JScrollPane(new JTable(model));
+            inventory_home.add(query_results);
             System.out.println("Number of rows affected by this query: " + row_count);
 
             // Close the connection
@@ -133,9 +115,9 @@ class oop_inventory {
         catch (SQLException error_sql_query) {
             System.err.println("SQL Error: " + error_sql_query.getMessage());
         }
-                
-        System.out.println(filters);
-                JOptionPane.showMessageDialog(inventory_home, ("Filtering with criteria: " + filters));
+        //JOptionPane.showMessageDialog(inventory_home, ("Selecting: " + filters));
+        JLabel message_search = new JLabel("Selecting: " + filters);
+        inventory_panel_template.add(message_search);
                 }          
             });
         buttons.add(Box.createVerticalStrut(50)); 
@@ -147,7 +129,6 @@ class oop_inventory {
         
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                    
                     JPanel new_entry_panel = inventory_panel_template;
                     JTextField enter_counts = new JTextField(1);
                     enter_counts.setMaximumSize(screenSize);

@@ -47,8 +47,7 @@ class oop_inventory {
 
         JButton filter_entry = new JButton("Filter Selections");
         filter_entry.addActionListener(new ActionListener() {
-        String query_select_filter = new String("SELECT * FROM company_inventory;");
-
+            String query_select_filter = new String("SELECT * FROM company_inventory");
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
             
@@ -56,35 +55,31 @@ class oop_inventory {
                 selections_map.put("thickness_in", dropdown_thickness_gauges_inches.getSelectedItem().toString());
                 selections_map.put("sheet_size_WL", dropdown_size.getSelectedItem().toString());
                 Set<Map.Entry<String, String>> selections_map_entrySet = selections_map.entrySet();
-                System.out.println(selections_map);
                 Collection<String> items = new ArrayList<>();
                 items.add(dropdown_size.getSelectedItem().toString());
                 int counting = 0;
                 System.out.println(counting);
                 Collection<String> filters = new ArrayList<>();
-                // map.keySet()
+                Collection<String> searchingStrings = new ArrayList<>();
+                
                 for (Map.Entry<String, String> item: selections_map_entrySet)
                 {
                     if (!"Select Option".equals(item.getValue())){
-                        for (String value : selections_map.values()) {
                         counting = counting + 1;
-                        filters.add(value);
-                        System.out.println(filters);
                         System.out.println(counting);
-                    }}
+                        filters.add(item.getValue().toString());
+                        searchingStrings.add(item.getKey() + " : " + item.getValue());}
+                    
                 }
-                
-                
+                System.out.println(searchingStrings);
                 try {
-            // Create a statement
-            String url = "jdbc:sqlite:C:lib/inventory.db";
             String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
                                 "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
             DefaultTableModel model = new DefaultTableModel(columnNames, 0);
             
             // metal_type, thickness, sheet_size
             // Updated query syntax for modern databases
-            Statement conn_statement = DriverManager.getConnection(url).createStatement();
+            Statement conn_statement = DriverManager.getConnection("jdbc:sqlite:C:lib/inventory.db").createStatement();
             
             // Execute the query
             int row_count = 0;
@@ -101,32 +96,24 @@ class oop_inventory {
                 run_connection.getString("location_area"),
                 run_connection.getString("rack"),
                 run_connection.getString("notes")};
-                System.out.println();
                 model.addRow(row);
             }
-            JScrollPane query_results = new JScrollPane(new JTable(model));
-            inventory_home.add(query_results);
             System.out.println("Number of rows affected by this query: " + row_count);
 
             // Close the connection
             conn_statement.close();
-            //System.out.println("Connection closed.");
+            System.out.println("Connection closed.");
         }
         catch (SQLException error_sql_query) {
             System.err.println("SQL Error: " + error_sql_query.getMessage());
         }
-        //JOptionPane.showMessageDialog(inventory_home, ("Selecting: " + filters));
-        JLabel message_search = new JLabel("Selecting: " + filters);
-        inventory_panel_template.add(message_search);
+        JOptionPane.showMessageDialog(inventory_home, ("Selecting: " + searchingStrings));
                 }          
             });
         buttons.add(Box.createVerticalStrut(50)); 
-
         JButton cancel_entry = new JButton("Cancel Entry");
         buttons.add(filter_entry);
         buttons.add(cancel_entry);
-        
-        
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JPanel new_entry_panel = inventory_panel_template;
@@ -164,7 +151,6 @@ class oop_inventory {
                     }
                     });
             }});
-
     JButton clickexit = new JButton("Exit");
     clickexit.setBounds(200,10,-1,-30);
     inventory_home.add(clickexit);

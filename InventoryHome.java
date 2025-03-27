@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 
-class oop_inventory {
+public class oop_inventory {
 
     public static <picks> void main(String[] args) {
         JFrame main_frame = new JFrame();
@@ -16,7 +16,7 @@ class oop_inventory {
         int y_screen = screenSize.height;
         System.out.println();
         main_frame.setTitle("Inventory App - Landing Page");
-        main_frame.setSize(x_screen/2,y_screen);
+        main_frame.setSize(x_screen/2,y_screen/2);
         main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel inventory_home = new JPanel();
         JPanel buttons = new JPanel();
@@ -32,7 +32,7 @@ class oop_inventory {
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
         JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "Other"});
-        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","22ga", "20ga", "18ga", "16ga", "14ga", "12ga", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "5/8", "1/2", "Other"});
+        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","22ga", "20ga", "18ga", "16ga", "14ga", "0.105", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "5/8", "1/2", "Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         
         inventory_panel_template.setSize(x_template, y_template);
@@ -44,10 +44,18 @@ class oop_inventory {
         inventory_panel_template.add(dropdown_size);
 
         inventory_panel_template.add(buttons);
+        
 
         JButton filter_entry = new JButton("Filter Selections");
+        buttons.add(Box.createVerticalStrut(50));
+
+        JButton cancel_entry = new JButton("Cancel Entry");
+        buttons.add(filter_entry);
+        buttons.add(cancel_entry);
+
         filter_entry.addActionListener(new ActionListener() {
-            String query_select_filter = new String("SELECT * FROM company_inventory");
+            String query_select_all = new String("SELECT * FROM company_inventory;");
+            String query_select_filter = new String("SELECT * FROM company_inventory WHERE ");
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
             
@@ -68,8 +76,13 @@ class oop_inventory {
                         counting = counting + 1;
                         System.out.println(counting);
                         filters.add(item.getValue().toString());
-                        searchingStrings.add(item.getKey() + " : " + item.getValue());}
+                        searchingStrings.add(item.getKey() + " : " + item.getValue());
+                        query_select_filter = query_select_filter + item.getKey() + " = \"" + item.getValue() + "\";";
+                    }
                     
+                }
+                if (filters.size() == 0){
+                    query_select_filter = query_select_all;
                 }
                 System.out.println(searchingStrings);
                 try {
@@ -83,6 +96,7 @@ class oop_inventory {
             
             // Execute the query
             int row_count = 0;
+            System.out.println(query_select_filter);
             ResultSet run_connection = conn_statement.executeQuery(query_select_filter);
             while(run_connection.next()){
                 Object[] row = {run_connection.getString("product_id"),
@@ -97,23 +111,31 @@ class oop_inventory {
                 run_connection.getString("rack"),
                 run_connection.getString("notes")};
                 model.addRow(row);
+                row_count = row_count + 1;
             }
+            JFrame found_inventory_frame = new JFrame();
+            found_inventory_frame.setSize(x_screen/4,y_screen/4);
+            JPanel panel = new JPanel();
+            
+            JScrollPane scrollPane = new JScrollPane(new JTable(model));
+            found_inventory_frame.add(panel.add(scrollPane));
+            Button found_button = new Button("Search Again");
+            JLabel label = new JLabel("text");
+            found_inventory_frame.add(found_button);
             System.out.println("Number of rows affected by this query: " + row_count);
 
             // Close the connection
             conn_statement.close();
             System.out.println("Connection closed.");
+            found_inventory_frame.setVisible(true);
         }
         catch (SQLException error_sql_query) {
             System.err.println("SQL Error: " + error_sql_query.getMessage());
         }
-        JOptionPane.showMessageDialog(inventory_home, ("Selecting: " + searchingStrings));
                 }          
             });
-        buttons.add(Box.createVerticalStrut(50)); 
-        JButton cancel_entry = new JButton("Cancel Entry");
-        buttons.add(filter_entry);
-        buttons.add(cancel_entry);
+        
+        
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JPanel new_entry_panel = inventory_panel_template;
@@ -151,6 +173,7 @@ class oop_inventory {
                     }
                     });
             }});
+
     JButton clickexit = new JButton("Exit");
     clickexit.setBounds(200,10,-1,-30);
     inventory_home.add(clickexit);

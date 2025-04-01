@@ -31,7 +31,7 @@ public class oop_inventory {
         int y_template = (y_screen - main_frame.getWidth()) / 8;
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
-        JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "Other"});
+        JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "430", "Other"});
         JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","0.03", "0.04", "0.05", "0.06", "0.07", "0.105", "0.12", "8ga", "0.188", "0.25", "0.3125", "0.375", "0.625", "0.50", "0.75","Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         
@@ -55,38 +55,39 @@ public class oop_inventory {
 
         filter_entry.addActionListener(new ActionListener() {
             String query_select_all = new String("SELECT * FROM company_inventory");
-            String query_select_filter = new String("SELECT * FROM company_inventory WHERE ");
+            StringBuilder query_select_filter = new StringBuilder("SELECT * FROM company_inventory WHERE ");
+            JFrame found_inventory_frame = new JFrame();
+            JPanel panel = new JPanel();
+
             public void actionPerformed(ActionEvent e) {
+                found_inventory_frame.setSize(x_screen/4, y_screen/4);
+                
                 HashMap<String, String> selections_map = new HashMap<>();
-            
+                
                 selections_map.put("metal_type", dropdown_type.getSelectedItem().toString());
                 selections_map.put("thickness_in", dropdown_thickness_gauges_inches.getSelectedItem().toString());
                 selections_map.put("sheet_size_WL", dropdown_size.getSelectedItem().toString());
                 Set<Map.Entry<String, String>> selections_map_entrySet = selections_map.entrySet();
-                Collection<String> items = new ArrayList<>();
-                items.add(dropdown_size.getSelectedItem().toString());
                 int counting = 0;
-                System.out.println(counting);
                 Collection<String> filters = new ArrayList<>();
                 Collection<String> searchingStrings = new ArrayList<>();
                 
-                for (Map.Entry<String, String> item: selections_map_entrySet)
+                for (Map.Entry<String, String> item : selections_map_entrySet)
                 {
                     if (!"Select Option".equals(item.getValue())){
-                        counting = counting + 1;
-                        System.out.println(counting);
                         filters.add(item.getValue().toString());
                         searchingStrings.add(item.getKey() + " = \"" + item.getValue()+"\"");
+                        query_select_filter.append(item.getKey() + " = \"" + item.getValue()+"\" AND ");
+                        
+                    System.out.println("Filters:" + filters.size());
+                    if (filters.size() > 3 && filters.size() > counting){
+                        query_select_filter.setLength(query_select_filter.length() - 5);
+                        System.out.println(query_select_filter);
+                        }
+                    counting += 1;
                     }
-
                 }
-                System.out.println(searchingStrings);
-                query_select_filter = query_select_filter + searchingStrings.toString() + ";";
-
-                System.out.println(query_select_filter);
-                if (filters.size() == 0){
-                    query_select_filter = query_select_all;
-                }
+                System.out.println(searchingStrings.size());
                 
                 try {
             String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
@@ -99,7 +100,7 @@ public class oop_inventory {
             // Execute the query
             int row_count = 0;
             System.out.println(query_select_filter);
-            ResultSet run_connection = conn_statement.executeQuery(query_select_filter+";");
+            ResultSet run_connection = conn_statement.executeQuery(query_select_filter + ";");
             while(run_connection.next()){
                 Object[] row = {run_connection.getString("product_id"),
                 run_connection.getBoolean("is_active"),
@@ -115,9 +116,6 @@ public class oop_inventory {
                 model.addRow(row);
                 row_count = row_count + 1;
             }
-            JFrame found_inventory_frame = new JFrame();
-            found_inventory_frame.setSize(x_screen/4,y_screen/4);
-            JPanel panel = new JPanel();
             
             JScrollPane scrollPane = new JScrollPane(new JTable(model));
             found_inventory_frame.add(panel.add(scrollPane));
@@ -182,6 +180,5 @@ public class oop_inventory {
         public void actionPerformed(ActionEvent e) {
             main_frame.dispose(); }});  
     main_frame.setVisible(true);
-
     }
 }

@@ -32,7 +32,7 @@ public class oop_inventory {
         inventory_panel_template.setLayout(new BoxLayout(inventory_panel_template, BoxLayout.Y_AXIS));
         inventory_panel_template.setSize(x_template, y_template);
         JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "Other"});
-        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","22ga", "20ga", "18ga", "16ga", "14ga", "0.105", "10ga", "8ga", "7ga", "3/16", "1/4", "5/16", "3/8", "5/8", "1/2", "Other"});
+        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","0.03", "0.04", "0.05", "0.06", "0.07", "0.105", "0.12", "8ga", "0.188", "0.25", "0.3125", "0.375", "0.625", "0.50", "0.75","Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
         
         inventory_panel_template.setSize(x_template, y_template);
@@ -54,7 +54,7 @@ public class oop_inventory {
         buttons.add(cancel_entry);
 
         filter_entry.addActionListener(new ActionListener() {
-            String query_select_all = new String("SELECT * FROM company_inventory;");
+            String query_select_all = new String("SELECT * FROM company_inventory");
             String query_select_filter = new String("SELECT * FROM company_inventory WHERE ");
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, String> selections_map = new HashMap<>();
@@ -76,28 +76,30 @@ public class oop_inventory {
                         counting = counting + 1;
                         System.out.println(counting);
                         filters.add(item.getValue().toString());
-                        searchingStrings.add(item.getKey() + " : " + item.getValue());
-                        query_select_filter = query_select_filter + item.getKey() + " = \"" + item.getValue() + "\";";
+                        searchingStrings.add(item.getKey() + " = \"" + item.getValue()+"\"");
                     }
-                    
+
                 }
+                System.out.println(searchingStrings);
+                query_select_filter = query_select_filter + searchingStrings.toString() + ";";
+
+                System.out.println(query_select_filter);
                 if (filters.size() == 0){
                     query_select_filter = query_select_all;
                 }
-                System.out.println(searchingStrings);
+                
                 try {
             String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
                                 "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
             DefaultTableModel model = new DefaultTableModel(columnNames, 0);
             
-            // metal_type, thickness, sheet_size
             // Updated query syntax for modern databases
             Statement conn_statement = DriverManager.getConnection("jdbc:sqlite:C:lib/inventory.db").createStatement();
             
             // Execute the query
             int row_count = 0;
             System.out.println(query_select_filter);
-            ResultSet run_connection = conn_statement.executeQuery(query_select_filter);
+            ResultSet run_connection = conn_statement.executeQuery(query_select_filter+";");
             while(run_connection.next()){
                 Object[] row = {run_connection.getString("product_id"),
                 run_connection.getBoolean("is_active"),
@@ -119,9 +121,7 @@ public class oop_inventory {
             
             JScrollPane scrollPane = new JScrollPane(new JTable(model));
             found_inventory_frame.add(panel.add(scrollPane));
-            Button found_button = new Button("Search Again");
-            JLabel label = new JLabel("text");
-            found_inventory_frame.add(found_button);
+
             System.out.println("Number of rows affected by this query: " + row_count);
 
             // Close the connection
@@ -182,5 +182,6 @@ public class oop_inventory {
         public void actionPerformed(ActionEvent e) {
             main_frame.dispose(); }});  
     main_frame.setVisible(true);
+
     }
 }

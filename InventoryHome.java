@@ -52,10 +52,11 @@ public class oop_inventory {
         JButton cancel_entry = new JButton("Cancel Entry");
         buttons.add(filter_entry);
         buttons.add(cancel_entry);
-
+        String query_select_all = new String("SELECT * FROM company_inventory");
+        String query = new String("SELECT * FROM company_inventory WHERE ");
+        StringBuilder query_select_filter = new StringBuilder("");
         filter_entry.addActionListener(new ActionListener() {
-            String query_select_all = new String("SELECT * FROM company_inventory");
-            StringBuilder query_select_filter = new StringBuilder("SELECT * FROM company_inventory WHERE ");
+            
             JFrame found_inventory_frame = new JFrame();
             JPanel panel = new JPanel();
 
@@ -77,18 +78,18 @@ public class oop_inventory {
                     if (!"Select Option".equals(item.getValue())){
                         filters.add(item.getValue().toString());
                         searchingStrings.add(item.getKey() + " = \"" + item.getValue()+"\"");
-                        query_select_filter.append(item.getKey() + " = \"" + item.getValue()+"\" AND ");
+                        query_select_filter.append(query + item.getKey() + " = \"" + item.getValue()+"\"");
                         
                     System.out.println("Filters:" + filters.size());
                     if (filters.size() > 3 && filters.size() > counting){
-                        query_select_filter.setLength(query_select_filter.length() - 5);
+                        query_select_filter.append(" AND ");
                         System.out.println(query_select_filter);
                         }
                     counting += 1;
                     }
                 }
                 System.out.println(searchingStrings.size());
-                
+                selections_map.clear();
                 try {
             String[] columnNames = {"Metal ID", "Active Status", "Last Updated", "Metal Type", "Thickness [in.]", "Thickness [MM]", 
                                 "Sheet Size [WxL]", "Total Counts", "Location Area", "Rack"}; // Column headers
@@ -178,7 +179,8 @@ public class oop_inventory {
     main_frame.setAutoRequestFocus(true);
     clickexit.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            main_frame.dispose(); }});  
+            main_frame  .dispose(); }});  
     main_frame.setVisible(true);
+
     }
 }

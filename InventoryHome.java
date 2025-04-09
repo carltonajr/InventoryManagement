@@ -64,14 +64,14 @@ public class oop_inventory {
         buttons.add(cancel_entry);
         StringBuilder query = new StringBuilder("SELECT * FROM company_inventory WHERE ");
         StringBuffer query_select_filter = new StringBuffer("");
-        filter_entry.addActionListener(new ActionListener() {
-            
-            JFrame found_inventory_frame = new JFrame();
-            JPanel panel = new JPanel();
+        
+        JFrame found_inventory_frame = new JFrame();
+        JPanel panel = new JPanel();
+        found_inventory_frame.setSize(x_screen/4, y_screen/4);
 
+        //On Click of the Filter Entry Button
+        filter_entry.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                found_inventory_frame.setSize(x_screen/4, y_screen/4);
-                
                 HashMap<String, String> selections_map = new HashMap<>();
                 Object type = dropdown_type.getSelectedItem();
                 Object thickness_in = dropdown_thickness_gauges_inches.getSelectedItem();
@@ -99,7 +99,7 @@ public class oop_inventory {
                         searchingStrings.add(item.getKey() + " = \"" + item.getValue()+"\"");
                         query_select_filter.append(item.getKey() + " = \"" + item.getValue()+"\"");
                         
-                    System.out.println("Filters:" + filters.size());
+                    System.out.println("\nFilters:" + filters.size());
                     if (filters.size() > 3 && filters.size() > counting){
                         query_select_filter.append(" AND ");
                         System.out.println(query_select_filter);
@@ -108,8 +108,8 @@ public class oop_inventory {
                     }
                     
                 }
-                
                 selections_map.clear();
+                System.out.println(selections_map);
                 System.out.println(query);
 
                 try {
@@ -124,6 +124,7 @@ public class oop_inventory {
 
             //count the rows being created 
             int row_count = 0;
+            System.out.println(query + ";");
             ResultSet run_connection = conn_statement.executeQuery(query + ";");
             while(run_connection.next()){
                 Object[] row = {run_connection.getString("product_id"),
@@ -158,6 +159,9 @@ public class oop_inventory {
             });
         
         
+        
+        
+        /////////
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JPanel new_entry_panel = update_inventory_panel_template;

@@ -1,12 +1,10 @@
 // imports
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
-import java.util.*;
+
 //Need to create a function that will temporarily store filters and clear them when set.
-public class unit_testing {
+public class chosen_filters {
     public static <picks> void main(String[] args)
     {
     JFrame main_frame = new JFrame();

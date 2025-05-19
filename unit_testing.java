@@ -1,65 +1,92 @@
-// imports
+
+//Imports for SQL, JavaX.Swing, AWT
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.util.*;
 
-//Need to create a function that will temporarily store filters and clear them when set.
-public class chosen_filters {
-    public static <picks> void main(String[] args)
-    {
-    JFrame main_frame = new JFrame();
-    main_frame.setResizable(false);
-    Toolkit toolkit = Toolkit.getDefaultToolkit();
-    Dimension screenSize = toolkit.getScreenSize();
-    int x_screen = screenSize.width;
-    int y_screen = screenSize.height;
-    main_frame.setTitle("Inventory App - Landing Page");
-    main_frame.setSize(x_screen/2,y_screen/2);
-    main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-    int x_template = (x_screen - main_frame.getWidth()) / 4;
-    int y_template = (y_screen - main_frame.getWidth()) / 4;
-    JPanel home = new JPanel();
-    JPanel buttons = new JPanel();
-    main_frame.add(home);
-    
+class unit_testing_file{
 
-    JButton clickinventory_add = new JButton("New Inventory Entry");
-        clickinventory_add.setBounds(200,10,1,3);
-        home.add(clickinventory_add);
-    
-    JButton filter_entry = new JButton("Filter Selections");
+    public static void main(String[] args){
+        JFrame main_frame = new JFrame();
+        main_frame.setResizable(false);
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        int x_screen = screenSize.width;
+        int y_screen = screenSize.height;
+        main_frame.setTitle("Inventory App - Landing Page");
+        main_frame.setSize(x_screen/2,y_screen/2);
+        main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel inventory_home = new JPanel();
+        JPanel buttons = new JPanel();
+        main_frame.add(inventory_home);
+
+        JPanel update_inventory_panel_template = new JPanel();
+        int x_template = (x_screen - main_frame.getWidth()) / 4;
+        int y_template = (y_screen - main_frame.getWidth()) / 4;
+        update_inventory_panel_template.setLayout(new BoxLayout(update_inventory_panel_template, BoxLayout.Y_AXIS));
+        update_inventory_panel_template.setSize(x_template, y_template);
+        JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "430", "Other"});
+        JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","0.03", "0.04", "0.05", "0.06", "0.07", "0.105", "0.12", "8ga", "0.188", "0.25", "0.3125", "0.375", "0.625", "0.50", "0.75","Other"});
+        JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
+
+        update_inventory_panel_template.setSize(x_template, y_template);
+        update_inventory_panel_template.add(new JLabel("Metal Type"));
+        update_inventory_panel_template.add(dropdown_type);
+        update_inventory_panel_template.add(new JLabel("Sheet Thickness [inches]"));
+        update_inventory_panel_template.add(dropdown_thickness_gauges_inches);
+        update_inventory_panel_template.add(new JLabel("Sheet Size [WxL]"));
+        update_inventory_panel_template.add(dropdown_size);
+        update_inventory_panel_template.add(buttons);
+        
+        JButton filter_entry = new JButton("Filter Selections");
         buttons.add(Box.createVerticalStrut(50));
-    
-    JButton cancel_entry = new JButton("Cancel Entry");
+
+        JButton cancel_entry = new JButton("Cancel Entry");
         buttons.add(filter_entry);
         buttons.add(cancel_entry);
-    clickinventory_add.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            JPanel new_inventory_panel = new JPanel();
-            new_inventory_panel.setLayout(new BoxLayout(new_inventory_panel, BoxLayout.Y_AXIS));
-            new_inventory_panel.setSize(x_template, y_template);
-            JTextField enter_counts = new JTextField(1);
-            enter_counts.setMaximumSize(screenSize);
-            main_frame.add(new_inventory_panel);
-            main_frame.setTitle("Inventory App - New Inventory");  
-                        
-            cancel_entry.addActionListener(new ActionListener() {
+
+
+        JPanel new_inventory_panel = new JPanel();
+        new_inventory_panel.setLayout(new BoxLayout(new_inventory_panel, BoxLayout.Y_AXIS));
+        new_inventory_panel.setSize(x_template, y_template);
+
+
+        JButton clickinventory_add = new JButton("New Inventory Entry");
+        clickinventory_add.setBounds(200,10,1,3);
+        inventory_home.add(clickinventory_add);
+
+    
+        clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                home.setVisible(true);
-                new_inventory_panel.setVisible(false);
-                main_frame.setTitle("Inventory App - Landing Page");
-                }});
-                home.setVisible(false);
-                new_inventory_panel.setVisible(true);
-                }});
-    JButton clickexit = new JButton("Exit");
-    clickexit.setBounds(200,10,-1,-30);
-    home.add(clickexit);
-    main_frame.setAutoRequestFocus(true);
-    clickexit.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            main_frame  .dispose(); }});  
-    main_frame.setVisible(true);
+                    JPanel new_entry_panel = update_inventory_panel_template;
+                    JTextField enter_counts = new JTextField(1);
+                    enter_counts.setMaximumSize(screenSize);
+                    main_frame.add(new_entry_panel);
+                    main_frame.setTitle("Inventory App - New Inventory");  
+                        
+                    cancel_entry.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                    inventory_home.setVisible(true);
+                    new_inventory_panel.setVisible(false);
+                    main_frame.setTitle("Inventory App - Landing Page");
+                    buttons.setVisible(false);
+                    }});
+                    
+                    inventory_home.setVisible(false);
+                    new_inventory_panel.setVisible(true);
+                    buttons.setVisible(true);
+                    }});
+        JButton clickexit = new JButton("Exit");
+        clickexit.setBounds(200,10,-1,-30);
+        inventory_home.add(clickexit);
+        main_frame.setAutoRequestFocus(true);
+        clickexit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                main_frame  .dispose(); }});  
+        main_frame.setVisible(true);
     }
 }

@@ -15,7 +15,7 @@ class unit_testing_file{
         Dimension screenSize = toolkit.getScreenSize();
         int x_screen = screenSize.width;
         int y_screen = screenSize.height;
-        main_frame.setTitle("Inventory App - Landing Page");
+        main_frame.setTitle("Inventory App - Landing Page [Testing Env.]");
         main_frame.setSize(x_screen/2,y_screen/2);
         main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -54,17 +54,18 @@ class unit_testing_file{
         new_inventory_panel.setSize(x_template, y_template);
 
 
-        JButton clickinventory_add = new JButton("New Inventory Entry");
-        clickinventory_add.setBounds(200,10,1,3);
-        inventory_home.add(clickinventory_add);
+        JButton clickinventory_update = new JButton("New Inventory Entry");
+        clickinventory_update.setBounds(200,10,1,3);
+        inventory_home.add(clickinventory_update);
 
     
-        clickinventory_add.addActionListener(new ActionListener() {
+        clickinventory_update.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JPanel new_entry_panel = update_inventory_panel_template;
                     new_entry_panel.setEnabled(false); 
-                    JTextField enter_counts = new JTextField(1);
+                    JTextField enter_counts = new JTextField(2);
                     enter_counts.setMaximumSize(screenSize);
+                    main_frame.add(enter_counts);
                     main_frame.add(new_entry_panel);
                     main_frame.setTitle("Inventory App - New Inventory");  
                     for (Component comp : new_entry_panel.getComponents()) {comp.setEnabled(true);}
@@ -77,9 +78,6 @@ class unit_testing_file{
                             new_entry_panel.setEnabled(false);
                             for(Component comp : new_entry_panel.getComponents()){comp.setEnabled(false);}
                     }});
-                    
-
-                    
                     inventory_home.setVisible(false);
                     buttons.setVisible(true);
                     }});

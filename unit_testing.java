@@ -1,4 +1,3 @@
-
 //Imports for SQL, JavaX.Swing, AWT
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -63,21 +62,25 @@ class unit_testing_file{
         clickinventory_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JPanel new_entry_panel = update_inventory_panel_template;
+                    new_entry_panel.setEnabled(false); 
                     JTextField enter_counts = new JTextField(1);
                     enter_counts.setMaximumSize(screenSize);
                     main_frame.add(new_entry_panel);
                     main_frame.setTitle("Inventory App - New Inventory");  
-                        
+                    for (Component comp : new_entry_panel.getComponents()) {comp.setEnabled(true);}
                     cancel_entry.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                    inventory_home.setVisible(true);
-                    new_inventory_panel.setVisible(false);
-                    main_frame.setTitle("Inventory App - Landing Page");
-                    buttons.setVisible(false);
+                        public void actionPerformed(ActionEvent e) {
+                            inventory_home.setVisible(true);
+                            main_frame.setTitle("Inventory App - Landing Page");
+                            buttons.setVisible(false);
+                            buttons.setEnabled(false);
+                            new_entry_panel.setEnabled(false);
+                            for(Component comp : new_entry_panel.getComponents()){comp.setEnabled(false);}
                     }});
                     
+
+                    
                     inventory_home.setVisible(false);
-                    new_inventory_panel.setVisible(true);
                     buttons.setVisible(true);
                     }});
         JButton clickexit = new JButton("Exit");

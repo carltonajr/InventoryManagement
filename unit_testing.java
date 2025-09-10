@@ -1,3 +1,4 @@
+
 //Imports for SQL, JavaX.Swing, AWT
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -49,9 +50,8 @@ class unit_testing_file{
         JComboBox<String> dropdown_type = new JComboBox<>(new String[] {"Select Option","Mild Steel", "Stainless Steel", "Aluminum", "430", "Other"});
         JComboBox<String> dropdown_thickness_gauges_inches = new JComboBox<>(new String[] {"Select Option","0.03", "0.04", "0.05", "0.06", "0.07", "0.105", "0.12", "8ga", "0.188", "0.25", "0.3125", "0.375", "0.625", "0.50", "0.75","Other"});
         JComboBox<String> dropdown_size = new JComboBox<>(new String[] {"Select Option", "48x96", "60x96", "48x120", "60x120", "Other"});
-        JComboBox<String> dropdown_locate = new JComboBox<>(new String[] {"Select Option", "ITW", "TWR", "1", "2", "3", "4", "5", "6"});
+        JComboBox<String> dropdown_locate = new JComboBox<>(new String[] {"Select Option", "Laser","ITW", "ITW2", "TWR", "1", "2", "3", "4", "5", "6"});
 
-        
         //
         search_panel_template.setSize(x_template, y_template);
         search_panel_template.add(new JLabel("Metal Type"));
@@ -69,14 +69,17 @@ class unit_testing_file{
         buttons.add(cancel_entry);
 
         SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
-        String[] inventory_sheet_columns = {"Rack", "Metal Type", "Sheet Size", "Qty Used", "Drops", "Remaining Sheets", "Notes"};
-        JTable daily = new JTable();
-        
+        //String[] inventory_sheet_columns = {"Rack", "Metal Type", "Sheet Size", "Qty Used", "Drops", "Remaining Sheets", "Notes"};
+        String[] inventory_sheet_columns = {"Rack Location", "Gauge","Metal Type", "Sheet Size"};
+        Object[][] data = {
+            {dropdown_locate, dropdown_thickness_gauges_inches, dropdown_type, dropdown_size},
+            {dropdown_locate, dropdown_thickness_gauges_inches, dropdown_type, dropdown_size}};
         entries.add(dropdown_locate);
         entries.add(dropdown_thickness_gauges_inches);
         entries.add(dropdown_type);
         entries.add(dropdown_size);
-        inventory_home.add(entries);
+        JTable daily = new JTable(data, inventory_sheet_columns);
+        inventory_home.add(daily);
 
         JPanel new_inventory_panel = new JPanel();
         new_inventory_panel.setLayout(new BoxLayout(new_inventory_panel, BoxLayout.Y_AXIS));
@@ -101,7 +104,7 @@ class unit_testing_file{
                     JPanel search_panel = search_panel_template;
                     for (Component comp : search_panel.getComponents()) {comp.setEnabled(true);}
                     search_panel.setEnabled(false); 
-                    ArrayList<String> selections = new ArrayList<String>();
+                    ArrayList<String> selections = new ArrayList<String>(3);
 
                     
                     JTextField enter_counts = new JTextField(2);
